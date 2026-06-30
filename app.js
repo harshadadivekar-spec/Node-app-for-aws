@@ -11,33 +11,22 @@
 // });
 
 const express = require('express');
-const path = require('path');
-
 const app = express();
-const PORT = 3000;
 
-// Serve static files from the "public" folder
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Home route
 app.get('/', (req, res) => {
     res.send(`
-        <h1>Welcome to My Node.js Application</h1>
-        <p>This application is running successfully.</p>
-        <a href="/about">About Us</a>
+        <h1>Welcome to My Application</h1>
+        <p>This application is deployed using AWS services.</p>
+        <a href="https://your-s3-bucket-name.s3.amazonaws.com/index.html">
+            View Static Website
+        </a>
     `);
 });
 
-// About route
 app.get('/about', (req, res) => {
-    res.send(`
-        <h2>About Page</h2>
-        <p>This is a sample Express application.</p>
-        <a href="/">Go Back</a>
-    `);
+    res.send('This application is running on AWS.');
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
 });
