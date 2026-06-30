@@ -22,8 +22,8 @@ phases:
   post_build:
     commands:
       - echo "Build finished on $(date)"
-
 artifacts:
+
   files:
     - 'package.json'
     - 'package-lock.json'
