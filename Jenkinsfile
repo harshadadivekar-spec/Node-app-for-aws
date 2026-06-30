@@ -1,45 +1,60 @@
 pipeline {
     agent any
+
     tools {
-        nodejs "NodeJs"
-        
+        nodejs 'NodeJS'   // Name of NodeJS configured in Jenkins
     }
+
+    environment {
+        APP_NAME = "nodejs-app"
+    }
+
     stages {
-        stage("Checkout") {
-            steps {
-                checkout scm   
 
-            }
-        }
-        stage("Install Dependencies") {
+        stage('Checkout Code') {
             steps {
-                bat "npm install"
+                git branch: 'master',
+                    url: 'https://github.com/harshadadivekar-spec/Node-app-for-aws.git'
             }
-        }
-        stage("Run Application") {
-            steps {
-                bat "npm start"
-            }
-        }
-        stage ("Test") {
-            steps {
-                echo "Running tests..."
-               // bat "npm test"
-            }
-        }
-        stage("Build") {
-            steps {
-                bat "npm run build"
-            }
-        }
-        stage("Deployment") {
-            steps {
-                bat "del /q /s C:\\inetpub\\wwwroot\\Nodeappforasw\\*"
-                bat "xcopy /E /I /Y build\\* C:\\inetpub\\wwwroot\\Nodeappforaws\\"
-                
-            }
-
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                sh '''
+                    echo "Deploying application..."
+                    pm2 stop ${APP_NAME} || true
+                    pm2 delete ${APP_NAME} || true
+                    pm2 start app.js --name ${APP_NAME}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Application deployed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed.'
+        }
     }
 }
