@@ -1,9 +1,9 @@
 {
   "name": "dbexpress",
   "version": "1.0.0",
-  "main": "myapp.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node myapp.js",
+    "start": "node app.js",
     "build": "echo Build Successful"
 
   },
